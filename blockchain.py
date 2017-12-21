@@ -3,14 +3,14 @@ from Crypto.Hash import SHA256
 import hashlib #TODO still need? Convert to Crypto lib.
 import datetime as date
 global POWSize #proof of work size
-POWSize = 5
+POWSize = 3
 
 #TODO multiple transactions per block
 class Block:
     def __init__(self, index, timestamp, data, lastHash, proofOfWork):
         self.index = index
         self.timestamp = timestamp
-        self.data = data
+        self.data = data #array of transactions
         self.lastHash = lastHash
         self.proofOfWork = proofOfWork
         self.hash = self.genHash()
