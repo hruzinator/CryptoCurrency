@@ -51,7 +51,7 @@ class Wallet:
         return self.signer.verify(digest, sig)
 
     def getPublicKey(self):
-        return self.key.publickey
+        return self.key.publickey()
 
     #get wallet ID
     def getWID(self):

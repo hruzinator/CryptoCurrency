@@ -3,7 +3,7 @@ from Crypto.Hash import SHA256
 import hashlib #TODO still need? Convert to Crypto lib.
 import datetime as date
 global POWSize #proof of work size
-POWSize = 3
+POWSize = 2
 
 #TODO multiple transactions per block
 class Block:
