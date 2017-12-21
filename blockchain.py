@@ -1,7 +1,8 @@
-#simple blockchain
+#simple blockchain.
 
 import hashlib
 import datetime as date
+
 
 class Block:
     def __init__(self, index, timestamp, data, lastHash):
@@ -13,12 +14,12 @@ class Block:
         
 
     def genHash(self):
-        sha = hashlib.sha256()
-        sha.update(str(self.index) 
+        hashGenerator = hashlib.sha256()
+        hashGenerator.update(str(self.index) 
             + str(self.timestamp)
             + str(self.data) 
             + str(self.lastHash))
-        return sha.hexdigest()
+        return hashGenerator.hexdigest()
 
 
 class Blockchain:
@@ -40,10 +41,3 @@ class Blockchain:
             print "Error! Invalid index"
             return False
         return self.chain[index].data
-
-
-#test the code
-ledger = Blockchain()
-ledger.addData("test")
-ledger.addData(" another test")
-print ledger.getBlockData(1)
