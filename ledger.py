@@ -33,5 +33,5 @@ class Ledger:
             print "Sender does not have adequite finances to complete this transaction. Transaction will not be added"
             return False
 
-        self.transactions.addData(data)
+        self.transactions.addBlock(data)
         return True
