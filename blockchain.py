@@ -5,7 +5,6 @@ import datetime as date
 global POWSize #proof of work size
 POWSize = 2
 
-#TODO multiple transactions per block
 class Block:
     def __init__(self, index, timestamp, data, lastHash, proofOfWork):
         self.index = index

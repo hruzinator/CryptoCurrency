@@ -4,7 +4,7 @@ from blockchain import Blockchain
 from wallet import Wallet
 
 global TRANSACTIONS_PER_BLOCK
-TRANSACTIONS_PER_BLOCK = 5
+TRANSACTIONS_PER_BLOCK = 1500
 
 
 class Ledger:
@@ -27,7 +27,6 @@ class Ledger:
         return True #TODO
 
 
-    #Need public keys to validate signatures
     #also, need to mix in an index to prevent a repeat attack!
 
     def addTransaction(self, data):
@@ -52,6 +51,5 @@ class Ledger:
         if len(self.transactions) >= TRANSACTIONS_PER_BLOCK:
             self.ledgerBlockchain.addBlock(self.transactions)
             self.transactions = []
-
 
         return True
