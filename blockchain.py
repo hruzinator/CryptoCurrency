@@ -11,13 +11,13 @@ class Block:
         self.data = data
         self.lastHash = lastHash
         self.hash = self.genHash()
-        
+
 
     def genHash(self):
         hashGenerator = hashlib.sha256()
-        hashGenerator.update(str(self.index) 
+        hashGenerator.update(str(self.index)
             + str(self.timestamp)
-            + str(self.data) 
+            + str(self.data)
             + str(self.lastHash))
         return hashGenerator.hexdigest()
 
