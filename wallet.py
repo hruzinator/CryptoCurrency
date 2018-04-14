@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
@@ -25,9 +27,9 @@ class Wallet:
         return key
 
     def saveNewKey(self):
-        print "Generating a new wallet key"
+        print("Generating a new wallet key")
         if os.path.isfile(self.walletFile):
-            print "wallet key already exists in current directory"
+            print("wallet key already exists in current directory")
             key = self.loadKey()
         else:
             #generate the key
@@ -41,13 +43,13 @@ class Wallet:
     def signMessage(self, message):
         #sign the message
         digest = SHA256.new()
-        digest.update(message)
+        digest.update(str.encode(message))
         signature = self.signer.sign(digest)
         return signature
 
     def validateMessage(self, message, sig):
         digest = SHA256.new()
-        digest.update(message)
+        digest.update(str.encode(message))
         return self.signer.verify(digest, sig)
 
     def getPublicKey(self):

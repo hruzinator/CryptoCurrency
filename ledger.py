@@ -1,7 +1,11 @@
+#!/usr/bin/python3
+
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA256
 from blockchain import Blockchain
 from wallet import Wallet
+
+import array, pickle
 
 global TRANSACTIONS_PER_BLOCK
 TRANSACTIONS_PER_BLOCK = 1500
@@ -16,7 +20,7 @@ class Ledger:
         sValidator = PKCS1_v1_5.new(sk)
         rValidator = PKCS1_v1_5.new(rk)
         certDigest = SHA256.new()
-        certDigest.update(m)
+        certDigest.update(str.encode(m))
         if not sValidator.verify(certDigest, ssig):
             return False
         if not rValidator.verify(certDigest, rsig):
@@ -25,6 +29,15 @@ class Ledger:
 
     def validateFinances(self, sid, amt):
         return True #TODO
+
+    def save(self, filename="./ledger.bc"):
+        #save as a .bc (blockchain) file
+        if len(self.transactions) != 0:
+            self.ledgerBlockchain.addBlock(self.transactions)
+            self.transactions = []
+        self.ledgerBlockchain.save(filename)
+
+    #TODO load a ledger to catch up where we left off!   
 
 
     #also, need to mix in an index to prevent a repeat attack!
@@ -40,16 +53,17 @@ class Ledger:
         message = str(senderID) + str(receiverID) + str(amt)
         sigsValid = self.validateSignatures(message, ssig, rsig, sPubKey, rPubKey)
         if not sigsValid:
-            print "Invalid Signature(s) detected when adding a transaction. Transaction will not be added"
+            print("Invalid Signature(s) detected when adding a transaction. Transaction will not be added")
             return False
         hasMoney = self.validateFinances(senderID, amt)
         if not hasMoney:
-            print "Sender does not have adequite finances to complete this transaction. Transaction will not be added"
+            print("Sender does not have adequite finances to complete this transaction. Transaction will not be added")
             return False
 
         self.transactions.append(data)
         if len(self.transactions) >= TRANSACTIONS_PER_BLOCK:
-            self.ledgerBlockchain.addBlock(self.transactions)
+            transactionBytes = pickle.dumps(self.transactions)
+            self.ledgerBlockchain.addBlock(transactionBytes)
             self.transactions = []
 
         return True
