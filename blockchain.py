@@ -13,7 +13,7 @@ class Block:
     def __init__(self, index, timestamp, data, lastHash, proofOfWork):
         self.index = index
         self.timestamp = timestamp
-        self.data = data #array of transactions
+        self.data = data
         self.lastHash = lastHash
         self.proofOfWork = proofOfWork
         self.hash = self.genHash()
