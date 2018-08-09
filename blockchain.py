@@ -38,6 +38,8 @@ class Block:
         return p
 
 class Blockchain:
+    VERSION_NUMBER = 0.1
+
     def __init__(self):
         self.chain = []
         genesisBlock = Block(0, date.datetime.now(), b'', "0", 0)
@@ -47,12 +49,11 @@ class Blockchain:
 
     def writeHeaderBytes(self, f):
         header = {
-            "versionNum" : 0.1,
-            "blockHeight" : 0
+            "versionNum" : self.VERSION_NUMBER,
+            "blockHeight" : len(self.chain)
         }
         headerBytes = pickle.dumps(header)
         f.write(headerBytes)
-        f.write(b'\n')
 
     def save(self, filename="./blockchain.bc"):
         #TODO handle appending to file so we don't have to rewrite the whole blockchain every time
@@ -64,9 +65,21 @@ class Blockchain:
             bcFile.write(blockBits)
         bcFile.close()
 
+    '''
+    Note: this will clear the current blockchain loaded in memory
+    '''
     def load(self, filename):
-        if not os.path.isFile(filename):
-            print("file does not exist. Could not load")
+        if not os.path.isfile(filename):
+            raise FileNotFoundError("file does not exist. Could not load")
+        blockFile = open(filename, 'rb')
+        header = pickle.load(blockFile)
+        lastBlock = None
+        self.chain = []
+        for i in range(header['blockHeight']):
+            blockData = pickle.load(blockFile)
+            lastBlock = Block(i, blockData['timestamp'], blockData['data'], blockData['lastHash'], blockData['proofOfWork'])
+            self.chain.append(lastBlock)
+        self.lastBlock = lastBlock
 
     def findPOW(self, data):
         if type(data) is not bytes:

@@ -39,8 +39,10 @@ class Ledger:
             self.transactions = self.transactions[TRANSACTIONS_PER_BLOCK:]
         self.ledgerBlockchain.save(filename)
 
-    #TODO load a ledger to catch up where we left off!   
-
+    def load(self, filename):
+        if type(filename) is not str:
+            raise TypeError("Filename must be of type str")
+        self.ledgerBlockchain.load(filename)
 
     #also, need to mix in an index to prevent a repeat attack!
 
