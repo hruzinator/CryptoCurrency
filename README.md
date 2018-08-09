@@ -34,3 +34,6 @@ Wallet.py manages actions pertaining to the user's cryptocurrency wallet. Abstra
 
 Wallet.py implements the following API:
 _TODO API_
+
+# Blockchain file
+I have picked the .bc file extension to use as my blockchain file format. Because of the large amounts of data stored in blockchains, I am opting to store data in a serialized manner. The file starts with a header, indicating blockchain version and the block height. This "metadata" is serialzed. This is follwed by serialized Block objects.
