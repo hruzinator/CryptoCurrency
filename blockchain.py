@@ -5,6 +5,7 @@ from Crypto.Hash import SHA256
 import hashlib #TODO still need? Convert to Crypto lib.
 import datetime as date
 import os.path
+import pickle
 
 global POWSize #proof of work size
 POWSize = 2
@@ -18,13 +19,23 @@ class Block:
         self.proofOfWork = proofOfWork
         self.hash = self.genHash()
 
-
     def genHash(self):
         hashGenerator = hashlib.sha256()
         hashStr = str(self.index) + str(self.timestamp) + str(self.data)+ str(self.lastHash)
         hashGenerator.update(str.encode(hashStr))
         return hashGenerator.hexdigest()
 
+    def getSerializedData(self):
+        data = {
+            'index' : self.index,
+            'timestamp': self.timestamp,
+            'lastHash': self.lastHash,
+            'hash' : self.hash,
+            'proofOfWork': self.proofOfWork,
+            'data' : self.data
+        }
+        p = pickle.dumps(data)
+        return p
 
 class Blockchain:
     def __init__(self):
@@ -34,22 +45,23 @@ class Blockchain:
         self.lastBlock = genesisBlock
         print("Added block 0 (genesisBlock) with hash " + str(genesisBlock.hash))
 
-    def writeHeader(self, f):
+    def writeHeaderBytes(self, f):
         header = {
             "versionNum" : 0.1,
             "blockHeight" : 0
         }
-        f.write(str(header))
-        f.write(str("\n"))
+        headerBytes = pickle.dumps(header)
+        f.write(headerBytes)
+        f.write(b'\n')
 
     def save(self, filename="./blockchain.bc"):
-        if not os.path.isfile(filename):
-            #write a header in new file
-            bcFile = open(filename, 'w')
-            self.writeHeader(bcFile)
+        #TODO handle appending to file so we don't have to rewrite the whole blockchain every time
+        bcFile = open(filename, 'wb')
+        self.writeHeaderBytes(bcFile)
         #write any new blocks to blockchain file
-        for blocks in self.chain:
-            bcFile.write("test\n")
+        for block in self.chain:
+            blockBits = block.getSerializedData()
+            bcFile.write(blockBits)
         bcFile.close()
 
     def load(self, filename):
