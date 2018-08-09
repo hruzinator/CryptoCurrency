@@ -40,7 +40,7 @@ class Block:
 class Blockchain:
     def __init__(self):
         self.chain = []
-        genesisBlock = Block(0, date.datetime.now(), "", "0", 0)
+        genesisBlock = Block(0, date.datetime.now(), b'', "0", 0)
         self.chain.append(genesisBlock)
         self.lastBlock = genesisBlock
         print("Added block 0 (genesisBlock) with hash " + str(genesisBlock.hash))
@@ -74,7 +74,6 @@ class Blockchain:
         #would be nice if Python had a do-while
         proofOfWork = 0
         powDigest = SHA256.new()
-        print(type(data))
         powDigest.update(data)
         powDigest.update(bytes(proofOfWork))
         while powDigest.hexdigest()[0:POWSize] != '0'*POWSize:
