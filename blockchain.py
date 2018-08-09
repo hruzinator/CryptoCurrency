@@ -57,9 +57,12 @@ class Blockchain:
             print("file does not exist. Could not load")
 
     def findPOW(self, data):
+        if type(data) is not bytes:
+            raise TypeError('Data argument needs to be of type \'bytes\'')
         #would be nice if Python had a do-while
         proofOfWork = 0
         powDigest = SHA256.new()
+        print(type(data))
         powDigest.update(data)
         powDigest.update(bytes(proofOfWork))
         while powDigest.hexdigest()[0:POWSize] != '0'*POWSize:
@@ -71,6 +74,8 @@ class Blockchain:
 
 
     def addBlock(self, data):
+        if type(data) is not bytes:
+            raise TypeError('Data argument needs to be of type \'bytes\'')
         print("Adding block. About to find proof of work....")
         proofOfWork = self.findPOW(data)
         nextBlock = Block(len(self.chain), date.datetime.now(), data, self.lastBlock.hash, proofOfWork)
