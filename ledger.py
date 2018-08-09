@@ -12,9 +12,10 @@ TRANSACTIONS_PER_BLOCK = 1500
 
 
 class Ledger:
-    def __init__(self):
+    def __init__(self, transactionsPerBlock=1500):
         self.ledgerBlockchain = Blockchain()
         self.transactions = [] #an array of transactions to go into a block
+        TRANSACTIONS_PER_BLOCK = transactionsPerBlock
 
     def validateSignatures(self, m, ssig, rsig, sk, rk):
         sValidator = PKCS1_v1_5.new(sk)
