@@ -62,9 +62,9 @@ class Ledger:
             return False
 
         self.transactions.append(data)
-        if len(self.transactions) >= TRANSACTIONS_PER_BLOCK:
-            transactionBytes = pickle.dumps(self.transactions)
+        while len(self.transactions) >= TRANSACTIONS_PER_BLOCK:
+            transactionBytes = pickle.dumps(self.transactions[0:TRANSACTIONS_PER_BLOCK])
             self.ledgerBlockchain.addBlock(transactionBytes)
-            self.transactions = []
+            self.transactions = self.transactions[TRANSACTIONS_PER_BLOCK:]
 
         return True
