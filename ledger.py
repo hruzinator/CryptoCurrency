@@ -33,10 +33,10 @@ class Ledger:
 
     def save(self, filename="./ledger.bc"):
         #save as a .bc (blockchain) file
-        if len(self.transactions) != 0:
+        while len(self.transactions) != 0:
             transactionBytes = pickle.dumps(self.transactions[0:TRANSACTIONS_PER_BLOCK])
             self.ledgerBlockchain.addBlock(transactionBytes)
-            self.transactions = []
+            self.transactions = self.transactions[TRANSACTIONS_PER_BLOCK:]
         self.ledgerBlockchain.save(filename)
 
     #TODO load a ledger to catch up where we left off!   
