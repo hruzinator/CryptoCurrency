@@ -1,0 +1,7 @@
+* handle file appending so we don't have to rewrite a save file all over again
+* Fix repeat attack issue
+* Documentation and better readme
+* make application to use cryptographic ledger
+
+Application:
+ - Network-based. ds
