@@ -6,6 +6,7 @@ from Crypto.PublicKey import RSA
 import os.path
 import dill
 
+
 class Wallet:
     def __init__(self, walletFile):
         self.walletFile = walletFile
@@ -19,7 +20,6 @@ class Wallet:
         widDigest.update(dill.dumps(self.getPublicKey()))
         self.wid = widDigest.hexdigest()
 
-
     def loadKey(self):
         keyfile = open(self.walletFile, 'r')
         key = RSA.importKey(keyfile.read())
@@ -32,16 +32,16 @@ class Wallet:
             print("wallet key already exists in current directory")
             key = self.loadKey()
         else:
-            #generate the key
+            # generate the key
             key = RSA.generate(2048)
-            #save the key
+            # save the key
             keyfile = open(self.walletFile, 'w')
             keyfile.write(key.exportKey('PEM'))
             keyfile.close()
         return key
 
     def signMessage(self, message):
-        #sign the message
+        # sign the message
         digest = SHA256.new()
         digest.update(str.encode(message))
         signature = self.signer.sign(digest)
@@ -55,6 +55,6 @@ class Wallet:
     def getPublicKey(self):
         return self.key.publickey()
 
-    #get wallet ID
+    # get wallet ID
     def getWID(self):
         return self.wid
