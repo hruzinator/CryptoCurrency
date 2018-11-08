@@ -1,2 +1,2 @@
-dill
-pycrypto
+dill==0.2.8.2
+pycryptodome==3.7.0
