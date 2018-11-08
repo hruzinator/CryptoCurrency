@@ -11,3 +11,4 @@ include/
 lib/
 .Python
 pip-selfcheck.json
+pyvenv.cfg
