@@ -2,6 +2,7 @@
 *.pem
 *.pyc
 *.bc
+.coverage
 
 # Do not track virtualenv files.
 __pycache__
