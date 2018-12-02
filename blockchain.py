@@ -48,22 +48,26 @@ class Blockchain:
         genesisBlock = Block(0, date.datetime.now(), b'', "0", 0)
         self.chain.append(genesisBlock)
         self.lastBlock = genesisBlock
-        print("Added block 0 (genesisBlock) with hash " +
-              str(genesisBlock.hash))
 
-    def writeHeaderBytes(self, f):
-        header = {
+    '''
+    Header of the blockchain, which contains some metadata about it.
+    Allows some space for miscilaenous data, but that data can't overwrite
+    versionNum or blockHeight.
+    '''
+    def writeHeaderBytes(self, f, misc_metadata={}):
+        header = misc_metadata
+        header.update({
             "versionNum": self.VERSION_NUMBER,
             "blockHeight": len(self.chain)
-        }
+        })
         headerBytes = pickle.dumps(header)
         f.write(headerBytes)
 
-    def save(self, filename="./blockchain.bc"):
+    def save(self, filename="./blockchain.bc", misc_metadata={}):
         # TODO handle appending to file so we don't have to rewrite the whole
         # blockchain every time
         bcFile = open(filename, 'wb')
-        self.writeHeaderBytes(bcFile)
+        self.writeHeaderBytes(bcFile, misc_metadata)
         # write any new blocks to blockchain file
         for block in self.chain:
             blockBits = block.getSerializedData()
@@ -86,11 +90,11 @@ class Blockchain:
                               blockData['lastHash'], blockData['proofOfWork'])
             self.chain.append(lastBlock)
         self.lastBlock = lastBlock
+        blockFile.close()
 
     def findPOW(self, data):
         if type(data) is not bytes:
             raise TypeError('Data argument needs to be of type \'bytes\'')
-        # would be nice if Python had a do-while
         proofOfWork = 0
         powDigest = SHA256.new()
         powDigest.update(data)
@@ -105,18 +109,16 @@ class Blockchain:
     def addBlock(self, data):
         if type(data) is not bytes:
             raise TypeError('Data argument needs to be of type \'bytes\'')
-        print("Adding block. About to find proof of work...")
         proofOfWork = self.findPOW(data)
         nextBlock = Block(len(self.chain), date.datetime.now(), data,
                           self.lastBlock.hash, proofOfWork)
         self.chain.append(nextBlock)
         self.lastBlock = nextBlock
-        print("Added block " + str(nextBlock.index) + " with hash " +
-              str(nextBlock.hash))
-        print("proof of work was " + str(proofOfWork))
 
     def getBlockData(self, index):
         if index < 0 or index >= len(self.chain):
-            print("Error! Invalid index")
             return False
         return self.chain[index].data
+
+    def getNumBlocks(self):
+        return len(self.chain)
