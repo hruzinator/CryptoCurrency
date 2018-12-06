@@ -70,6 +70,19 @@ class BlockchainTests(unittest.TestCase):
 		bc4.save('testSave.bc')
 		self.assertTrue(os.path.isfile('./testSave.bc'))
 
+	def test_save_extraMetadata(self):
+		bc4 = blockchain.Blockchain()
+		firstBlockData = b'This is the first block. Should have index 1'
+		secondBlockData = b'This is the second block. Should have index 2'
+		bc4.addBlock(firstBlockData)
+		bc4.addBlock(secondBlockData)
+		bc4.save('testSave2.bc', {'finances':{
+				'Alice':0.001,
+				'Bob':0.072
+			}
+		})
+		self.assertTrue(os.path.isfile('./testSave2.bc'))
+
 	def test_load(self):
 		self.bcLoading.load('./testLoad.bc')
 
@@ -77,11 +90,12 @@ class BlockchainTests(unittest.TestCase):
 	def tearDownClass(self):
 		os.remove('./testLoad.bc')
 		os.remove('./testSave.bc')
-
-class WalletTests(unittest.TestCase):
-	pass
+		os.remove('./testSave2.bc')
 
 class LedgerTests(unittest.TestCase):
+	pass
+
+class WalletTests(unittest.TestCase):
 	pass
 
 class AppTests(unittest.TestCase):
