@@ -4,7 +4,6 @@ from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 import os.path
-import dill
 
 
 class Wallet:
@@ -17,7 +16,7 @@ class Wallet:
         self.signer = PKCS1_v1_5.new(self.key)
 
         widDigest = SHA256.new()
-        widDigest.update(dill.dumps(self.getPublicKey()))
+        widDigest.update(self.getPublicKey().exportKey('PEM'))
         self.wid = widDigest.hexdigest()
 
     def loadKey(self):
@@ -35,7 +34,7 @@ class Wallet:
             # generate the key
             key = RSA.generate(2048)
             # save the key
-            keyfile = open(self.walletFile, 'w')
+            keyfile = open(self.walletFile, 'wb')
             keyfile.write(key.exportKey('PEM'))
             keyfile.close()
         return key
