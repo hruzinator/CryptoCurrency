@@ -12,18 +12,21 @@ Blockchain.py implements two objects:
  * a field for the proof of work
 2. Blockchain - array of blocks.
 
+You can interact with the Blockchain as such:
+Blockchain:
+* load(filename): load a blockchain file into memory
+* save(filenanme="./blockchain.bc"): save in-memory blockchain to a file
+
 
 # Ledger
-A ledger _implements_ a block chain. It is in charge of creating "tranasactions", and it should only create transactions once both parties have signed off on the transaction. It maintains a list of signed transactions until the list is large enough to create a block for the blockchain. The ledger also has load and save a ledger to a file with the .bc extension (BlockChain).
+A ledger _implements_ a block chain. It is in charge of creating "tranasactions", and it should only create transactions once the sender signs off on the transaction. It maintains a list of signed transactions until the list is large enough to create a block for the blockchain. The ledger also has load and save a ledger to a file with the .bc extension (BlockChain).
 
 A ledger is made up of multiple tranasactions. The transactions have the following format for their data:
  * sender - The ID number of the sender
  * reciever - The ID number of the reciever
  * amount - the amount to be transferred
  * senderSig - Signature from the sender
- * recieverSig - Signature from the receiver
- * sendePubKey - Sender's public key, for validating the signature
- * receiverPubKey - Reciever's public key, for validating the signature
+ * senderPubKey - Sender's public key, for validating the signature
 
 
 Ledger.py implements the following API:
