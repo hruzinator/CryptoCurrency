@@ -1,7 +1,18 @@
-* handle file appending so we don't have to rewrite a save file all over again
-* Fix repeat attack issue
-* Documentation and better readme
-* make application to use cryptographic ledger
 
-Application:
- - Network-based. ds
+ALPHA version 0.1 (proof-of-concept)
+
+Prioritized list of issues:
+* implement getFinances in ledger.py to ensure finances are available for transaction
+* make application to use cryptographic ledger
+* Fix repeat attack issue
+* handle file appending so we don't have to rewrite a save file all over again
+* tests for code: 100% code coverage using coverage.py
+* Passes flake8 style standards (check)
+* Documentation and better readme
+
+future ideas (NOT GOING IN CURRENT RELEASE):
+* Make it network-based. This is an obvious inclusion for any cryto-currency but as of right now its still a proof-of-concept
+* Design a better way to validate finances by caching this data somewhere so we don't have to go through a full transaction history
+* Mining rewards
+
+REMOVED reciever signatures!
