@@ -76,6 +76,28 @@ class App:
     def mine(self):
         pass
 
+    def adminMenu(self):
+        print("Welcome to the admin menu, for testing purposes, this secret menu is included. It should not be included in any production version of the site.")
+        print("")
+        print("Please select an option from the menu below: ")
+        print("1. Add or remove money from an account")
+        option = input("Please select an option: ")
+        if option == '1':
+            uid = input("account number to add currency to: ")
+            while not self.ledger.checkUserInLedger(uid):
+                print("user not found in ledger")
+                uid = input("account number to add currency to: ")
+            balance = self.ledger.checkBalance(uid)
+            print("The balance in this account is " + str(balance))
+            amount = input("Enter an amount. Positive numbers add value to the account. Negative numbers remove value: ")
+            amount = int(amount)
+            while(balance+amount<0):
+                print("That number would bring the account balance below 0, which we cannot do.")
+                amount = input("Enter an amount. Positive numbers add value to the account. Negative numbers remove value: ")
+            self.ledger.addBlockReward(uid, amount)
+            balance = self.ledger.checkBalance(uid)
+            print("Operation completed. The balance of user " + str(uid) + " is " + str(balance))
+
 
     def mainMenu(self):
         while True:
@@ -104,6 +126,10 @@ class App:
                 self.mine()
             elif option == '4':
                 break
+            elif option == '99':
+                # somewhat secret option for performing options we wouldn't normally allow.
+                # this is just for demonstration purposes. Normally, this wouldn't be allowed
+                self.adminMenu()
             else:
                 print("Please input a valid option")
 
