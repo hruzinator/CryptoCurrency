@@ -3,7 +3,6 @@ ALPHA version 0.1 (proof-of-concept)
 
 Prioritized list of issues:
 * implement mining and proof-of-work
-* make way of adding "block rewards" and injecting money into the economy. We start with nothing!
 * Fix repeat attack issue
 * tests for code: 100% code coverage using coverage.py
 * Passes flake8 style standards (check)
@@ -16,3 +15,6 @@ future ideas (NOT GOING IN CURRENT RELEASE):
 * Design a better way to validate finances by caching this data somewhere so we don't have to go through a full transaction history
 
 REMOVED reciever signatures!
+
+DONE:
+* make way of adding "block rewards" and injecting money into the economy. We start with nothing!
