@@ -29,21 +29,29 @@ class App:
         if option == "1":
             uid = self.userWallet.getWID()
             balance = self.ledger.checkBalance(uid)
-            print("------")
-            print("Your account number is: " + uid)
-            print("Your balance is " + str(balance))
-            print("------")
-            return
-        if option == "2":
+            if balance is None:
+                print("------")
+                print("It appears that you do not have any transactions on the ledger yet.")
+                print("------")
+            else:
+                print("------")
+                print("Your account number is: " + uid)
+                print("Your balance is " + str(balance))
+                print("------")
+        elif option == "2":
             uid = input("Please enter the ID of the account you would like to check: ")
             while not self.ledger.checkUserInLedger(uid):
                 print("user not found in ledger")
                 uid = input("Please enter the ID of the account you would like to check: ")
             balance = self.ledger.checkBalance(uid)
-            print("------")
-            print("The balance is " + str(balance))
-            print("------")
-            return
+            if balance is None:
+                print("------")
+                print("It appears that this user does not have any transactions on the ledger yet.")
+                print("------")
+            else:
+                print("------")
+                print("The balance is " + str(balance))
+                print("------")
             
 
     def sendMoney(self):
