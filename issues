@@ -2,17 +2,17 @@
 ALPHA version 0.1 (proof-of-concept)
 
 Prioritized list of issues:
-* implement getFinances in ledger.py to ensure finances are available for transaction
-* make application to use cryptographic ledger
+* implement mining and proof-of-work
+* make way of adding "block rewards" and injecting money into the economy. We start with nothing!
 * Fix repeat attack issue
-* handle file appending so we don't have to rewrite a save file all over again
 * tests for code: 100% code coverage using coverage.py
 * Passes flake8 style standards (check)
 * Documentation and better readme
+* go through code and address any remaining TODOs
 
 future ideas (NOT GOING IN CURRENT RELEASE):
 * Make it network-based. This is an obvious inclusion for any cryto-currency but as of right now its still a proof-of-concept
+* Handle file appending so we don't have to rewrite a save file all over again
 * Design a better way to validate finances by caching this data somewhere so we don't have to go through a full transaction history
-* Mining rewards
 
 REMOVED reciever signatures!
