@@ -26,40 +26,39 @@ class Ledger:
         return True
 
     def checkUserInLedger(self, uid):
-        return True #TODO implement
+        if not self.financeCache:
+            self.buildCache()
+        return uid in self.financeCache
 
-    def calculateAllFinances(self):
+    #DOES NOT PERFORM CHECKS RIGHT NOW
+    def buildCache(self):
         self.financeCache = {} #clear data
         for i in range(1, self.ledgerBlockchain.getNumBlocks()):
             blockBytes = self.ledgerBlockchain.getBlockData(i)
-            #TODO finish
+            blockData = pickle.loads(blockBytes)
+
+            rec = blockData['reciever']
+            amount = blockData['amount']
+
+            if rec not in self.financeCache:
+                self.financeCache[rec] = 0
+     
+            if blockData['type'] == 'reward':
+                self.financeCache[rec] += amt
+            elif blockData['type'] == 'transaction':
+                send = blockData['sender']
+                if send not in self.financeCache:
+                    self.financeCache[send] = 0
+                self.financeCache[send] -= amt
+                self.financeCache[rec] += amt
 
 
     #TODO substitute for a simple lookup and ensure that lookup table is kept
     #up-to-date
     def checkBalance(self, uid):
-        finances = 0
-        for i in range(1, self.ledgerBlockchain.getNumBlocks()):
-            blockBytes = self.ledgerBlockchain.getBlockData(i)
-            blockData = pickle.loads(blockBytes)
-            if blockData['type'] == 'transaction':
-                if blockData['receiver'] == uid:
-                    finances += blockData['amount']
-                if blockData['sender'] == uid:
-                    finances -= blockData['amount']
-            elif blockData['type'] == 'reward':
-                if blockData['receiver'] == uid:
-                    finances += blockData['amount']
-        for transaction in self.transactions:
-            if transaction['type'] == 'transaction':
-                if transaction['receiver'] == uid:
-                    finances += transaction['amount']
-                if transaction['sender'] == uid:
-                    finances -= transaction['amount']
-            elif transaction['type'] == 'reward':
-                if transaction['receiver'] == uid:
-                    finances += transaction['amount']
-        return finances
+        if uid not in self.financeCache:
+            return None
+        return self.financeCache[uid]
 
     def transactionsToBlocks(self):
         while len(self.transactions) >= TRANSACTIONS_PER_BLOCK:
@@ -81,7 +80,7 @@ class Ledger:
         if type(filename) is not str:
             raise TypeError("Filename must be of type str")
         self.ledgerBlockchain.load(filename)
-        self.calculateAllFinances()
+        self.buildCache()
 
     # also, need to mix in an index to prevent a repeat attack!
 
@@ -105,6 +104,8 @@ class Ledger:
 
         self.transactions.append(data)
         self.transactionsToBlocks()
+        self.financeCache[recieverID] += amount
+        self.financeCache[senderID] -= amount
 
         return (True, "Transaction added")
 
@@ -124,6 +125,7 @@ class Ledger:
         
         self.transactions.append(data)
         self.transactionsToBlocks()
+        self.financeCache[reciever] += amount
 
         return (True, "Reward added")
         
