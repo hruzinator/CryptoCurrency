@@ -81,6 +81,8 @@ class App:
         print("")
         print("Please select an option from the menu below: ")
         print("1. Add or remove money from an account")
+        print("2. Show current state of the finance cache")
+        print("3. Show size of the blockchain")
         option = input("Please select an option: ")
         if option == '1':
             uid = input("account number to add currency to: ")
@@ -97,7 +99,13 @@ class App:
             self.ledger.addBlockReward(uid, amount)
             balance = self.ledger.checkBalance(uid)
             print("Operation completed. The balance of user " + str(uid) + " is " + str(balance))
-
+        elif option == '2':
+            cache = self.ledger.financeCache
+            print("This is the current finance cache:")
+            print(cache)
+        elif option == '3':
+            print("This is the current size of the blockchain, not including any unapplied transactions: " 
+                + str(self.ledger.ledgerBlockchain.getNumBlocks()))
 
     def mainMenu(self):
         while True:
