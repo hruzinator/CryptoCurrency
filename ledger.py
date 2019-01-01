@@ -32,6 +32,8 @@ class Ledger:
         self.financeCache = {} #clear data
         for i in range(1, self.ledgerBlockchain.getNumBlocks()):
             blockBytes = self.ledgerBlockchain.getBlockData(i)
+            #TODO finish
+
 
     #TODO substitute for a simple lookup and ensure that lookup table is kept
     #up-to-date
@@ -39,18 +41,32 @@ class Ledger:
         finances = 0
         for i in range(1, self.ledgerBlockchain.getNumBlocks()):
             blockBytes = self.ledgerBlockchain.getBlockData(i)
-            import pdb; pdb.set_trace()
             blockData = pickle.loads(blockBytes)
-            if blockData['receiver'] == uid:
-                finances += blockData['amount']
-            if blockData['sender'] == uid:
-                finances -= blockData['amount']
+            if blockData['type'] == 'transaction':
+                if blockData['receiver'] == uid:
+                    finances += blockData['amount']
+                if blockData['sender'] == uid:
+                    finances -= blockData['amount']
+            elif blockData['type'] == 'reward':
+                if blockData['receiver'] == uid:
+                    finances += blockData['amount']
         for transaction in self.transactions:
-            if transaction['receiver'] == uid:
-                finances += transaction['amount']
-            if transaction['sender'] == uid:
-                finances -= transaction['amount']
+            if transaction['type'] == 'transaction':
+                if transaction['receiver'] == uid:
+                    finances += transaction['amount']
+                if transaction['sender'] == uid:
+                    finances -= transaction['amount']
+            elif transaction['type'] == 'reward':
+                if transaction['receiver'] == uid:
+                    finances += transaction['amount']
         return finances
+
+    def transactionsToBlocks(self):
+        while len(self.transactions) >= TRANSACTIONS_PER_BLOCK:
+            block = pickle.dumps(
+                self.transactions[0:TRANSACTIONS_PER_BLOCK])
+            self.ledgerBlockchain.addBlock(block)
+            self.transactions = self.transactions[TRANSACTIONS_PER_BLOCK:]
 
     def save(self, filename="./ledger.bc"):
         # save as a .bc (blockchain) file
@@ -70,6 +86,7 @@ class Ledger:
     # also, need to mix in an index to prevent a repeat attack!
 
     def addTransaction(self, data):
+        data['type'] = 'transaction'
         senderID = data['sender']
         receiverID = data['receiver']
         amt = data['amount']
@@ -83,16 +100,31 @@ class Ledger:
                   "transaction. Transaction will not be added")
         hasMoney = self.checkBalance(senderID)
         if not hasMoney:
-            print()
             return (False, "Sender does not have adequite finances to complete" +
                   "this transaction. Transaction will not be added")
 
         self.transactions.append(data)
-        while len(self.transactions) >= TRANSACTIONS_PER_BLOCK:
-            block = pickle.dumps(
-                self.transactions[0:TRANSACTIONS_PER_BLOCK])
-            self.ledgerBlockchain.addBlock(block)
-            self.transactions = self.transactions[TRANSACTIONS_PER_BLOCK:]
+        self.transactionsToBlocks()
 
         return (True, "Transaction added")
+
+
+
+    def addBlockReward(self, reciever, amount):
+        # validation
+        if not self.checkUserInLedger(reciever):
+            raise Exception("Tried to add a block reward to a user that doesn't exist.")
+        if type(amount) is not int:
+            raise TypeError("amount must be of type int")
+        data = {
+            'type': 'reward',
+            'receiver': reciever,
+            'amount': amount
+        }
+        
+        self.transactions.append(data)
+        self.transactionsToBlocks()
+
+        return (True, "Reward added")
+        
 
