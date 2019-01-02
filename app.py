@@ -81,6 +81,7 @@ class App:
         result = self.ledger.addTransaction(data)
         print(result[1])
 
+    #TODO implement mining
     def mine(self):
         pass
 

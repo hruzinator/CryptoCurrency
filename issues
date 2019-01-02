@@ -12,9 +12,8 @@ Prioritized list of issues:
 future ideas (NOT GOING IN CURRENT RELEASE):
 * Make it network-based. This is an obvious inclusion for any cryto-currency but as of right now its still a proof-of-concept
 * Handle file appending so we don't have to rewrite a save file all over again
-* Design a better way to validate finances by caching this data somewhere so we don't have to go through a full transaction history
-
-REMOVED reciever signatures!
 
 DONE:
 * make way of adding "block rewards" and injecting money into the economy. We start with nothing!
+* Design a better way to validate finances by caching this data somewhere so we don't have to go through a full transaction history
+* REMOVED reciever signatures!

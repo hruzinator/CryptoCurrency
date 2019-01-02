@@ -52,9 +52,6 @@ class Ledger:
                 self.financeCache[send] -= amt
                 self.financeCache[rec] += amt
 
-
-    #TODO substitute for a simple lookup and ensure that lookup table is kept
-    #up-to-date
     def checkBalance(self, uid):
         if uid not in self.financeCache:
             return None
@@ -82,7 +79,7 @@ class Ledger:
         self.ledgerBlockchain.load(filename)
         self.buildCache()
 
-    # also, need to mix in an index to prevent a repeat attack!
+    #TODO also, need to mix in an index to prevent a repeat attack!
 
     def addTransaction(self, data):
         data['type'] = 'transaction'
