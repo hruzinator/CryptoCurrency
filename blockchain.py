@@ -5,7 +5,9 @@ from Crypto.Hash import SHA256
 import hashlib
 import datetime as date
 import os.path
+import sys
 import pickle
+from pickle import UnpicklingError
 
 global POWSize  # proof of work size
 POWSize = 2
@@ -81,16 +83,21 @@ class Blockchain:
         if not os.path.isfile(filename):
             raise FileNotFoundError("file does not exist. Could not load")
         blockFile = open(filename, 'rb')
-        header = pickle.load(blockFile)
-        lastBlock = None
-        self.chain = []
-        for i in range(header['blockHeight']):
-            blockData = pickle.load(blockFile)
-            lastBlock = Block(i, blockData['timestamp'], blockData['data'],
-                              blockData['lastHash'], blockData['proofOfWork'])
-            self.chain.append(lastBlock)
-        self.lastBlock = lastBlock
-        blockFile.close()
+        try:
+            header = pickle.load(blockFile)
+            lastBlock = None
+            self.chain = []
+            for i in range(header['blockHeight']):
+                blockData = pickle.load(blockFile)
+                lastBlock = Block(i, blockData['timestamp'], blockData['data'],
+                                  blockData['lastHash'], blockData['proofOfWork'])
+                self.chain.append(lastBlock)
+            self.lastBlock = lastBlock
+            blockFile.close()
+        except(UnpicklingError, KeyError):
+            print("It appears the blockchain you are attempting to load is not a valid Blockchain file.")
+            print("Check the file name and try again. If that doesn't work, it's possible that the file is corrupted")
+            sys.exit()
 
     def findPOW(self, data):
         if type(data) is not bytes:
