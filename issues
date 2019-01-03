@@ -2,7 +2,6 @@
 ALPHA version 0.1 (proof-of-concept)
 
 Prioritized list of issues:
-* implement mining and proof-of-work
 * Fix repeat attack issue
 * tests for code: 100% code coverage using coverage.py
 * Passes flake8 style standards (check)
@@ -17,3 +16,4 @@ DONE:
 * make way of adding "block rewards" and injecting money into the economy. We start with nothing!
 * Design a better way to validate finances by caching this data somewhere so we don't have to go through a full transaction history
 * REMOVED reciever signatures!
+* implement mining and proof-of-work --> NOTE: mining and proof-of-work already exist in this project, they are just done automatically. In the future, when the app is network-based, mine will listen to transactions on the network and will attempt to complete the proof-of-work with those transactions

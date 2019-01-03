@@ -2,7 +2,7 @@
 
 # simple blockchain.
 from Crypto.Hash import SHA256
-import hashlib  # TODO still need? Convert to Crypto lib.
+import hashlib
 import datetime as date
 import os.path
 import pickle
