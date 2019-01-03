@@ -2,7 +2,9 @@
 
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA256
+from Crypto.PublicKey import RSA
 from blockchain import Blockchain
+from wallet import Wallet
 
 import pickle
 
@@ -18,6 +20,7 @@ class Ledger:
         self.financeCache = {}
 
     def validateSignature(self, m, ssig, sk):
+        sk = RSA.import_key(sk)
         sValidator = PKCS1_v1_5.new(sk)
         certDigest = SHA256.new()
         certDigest.update(str.encode(m))
@@ -34,23 +37,23 @@ class Ledger:
     def buildCache(self):
         self.financeCache = {} #clear data
         for i in range(1, self.ledgerBlockchain.getNumBlocks()):
-            blockBytes = self.ledgerBlockchain.getBlockData(i)
-            blockData = pickle.loads(blockBytes)
+            block = pickle.loads(
+                self.ledgerBlockchain.getBlockData(i))
+            for entry in block:
+                rec = entry['receiver']
+                amount = entry['amount']
 
-            rec = blockData['reciever']
-            amount = blockData['amount']
-
-            if rec not in self.financeCache:
-                self.financeCache[rec] = 0
-     
-            if blockData['type'] == 'reward':
-                self.financeCache[rec] += amt
-            elif blockData['type'] == 'transaction':
-                send = blockData['sender']
-                if send not in self.financeCache:
-                    self.financeCache[send] = 0
-                self.financeCache[send] -= amt
-                self.financeCache[rec] += amt
+                if rec not in self.financeCache:
+                    self.financeCache[rec] = 0
+         
+                if entry['type'] in ['reward', 'newUser']:
+                    self.financeCache[rec] += amount
+                elif entry['type'] == 'transaction':
+                    send = entry['sender']
+                    if send not in self.financeCache:
+                        self.financeCache[send] = 0
+                    self.financeCache[send] -= amount
+                    self.financeCache[rec] += amount
 
     def checkBalance(self, uid):
         if uid not in self.financeCache:
@@ -81,6 +84,19 @@ class Ledger:
 
     #TODO also, need to mix in an index to prevent a repeat attack!
 
+    def addUserToLedger(self, user, amount=0):
+        if self.checkUserInLedger(user):
+            return (False, "User already exists in ledger")
+        data = {
+            'type': 'newUser',
+            'receiver': user,
+            'amount': amount
+        }
+        self.transactions.append(data)
+        self.transactionsToBlocks()
+        self.financeCache[user] = amount
+        return (True, "User added to ledger")
+
     def addTransaction(self, data):
         data['type'] = 'transaction'
         senderID = data['sender']
@@ -95,18 +111,16 @@ class Ledger:
             return (False, "Invalid Signature(s) detected when adding a " +
                   "transaction. Transaction will not be added")
         hasMoney = self.checkBalance(senderID)
-        if not hasMoney:
+        if not hasMoney or hasMoney < amt:
             return (False, "Sender does not have adequite finances to complete" +
                   "this transaction. Transaction will not be added")
 
         self.transactions.append(data)
         self.transactionsToBlocks()
-        self.financeCache[recieverID] += amount
-        self.financeCache[senderID] -= amount
+        self.financeCache[receiverID] += amt
+        self.financeCache[senderID] -= amt
 
         return (True, "Transaction added")
-
-
 
     def addBlockReward(self, reciever, amount):
         # validation

@@ -21,7 +21,7 @@ Blockchain:
 # Ledger
 A ledger _implements_ a block chain. It is in charge of creating "tranasactions", and it should only create transactions once the sender signs off on the transaction. It maintains a list of signed transactions until the list is large enough to create a block for the blockchain. The ledger also has load and save a ledger to a file with the .bc extension (BlockChain).
 
-A ledger is made up of multiple entries. Entries can be of type Transaction or BlockReward. The entries have the following format for their data:
+A ledger is made up of multiple entries. Entries are of a certain type. The entries have the following format for their data:
 1. Transaction Types
  * type - Field should be set to _transaction_
  * sender - The ID number of the sender
@@ -33,6 +33,10 @@ A ledger is made up of multiple entries. Entries can be of type Transaction or B
  * type - Field should be set to _reward_
  * reciever - UID of the recipient
  * amount - the amount of block reward
+ 3. New User type
+ * type - Field should be set to _newUser_
+ * reciever - UID of new user
+ * amount - starting balance
 
 
 Ledger.py implements the following API:
