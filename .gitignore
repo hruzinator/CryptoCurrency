@@ -3,13 +3,13 @@
 *.pyc
 *.bc
 .coverage
+test/
 
 # Do not track virtualenv files.
 __pycache__
 bin/
 include/
 lib/
-test/
 .Python
 pip-selfcheck.json
 pyvenv.cfg
