@@ -85,10 +85,6 @@ class App:
         result = self.ledger.addTransaction(data)
         print(result[1])
 
-    #TODO implement mining
-    def mine(self):
-        pass
-
     def adminTestMenu(self):
         print("This is the admin test menu. Use this for practical testing.")
         if not os.path.exists('./test'):
@@ -209,16 +205,13 @@ class App:
             print("Please select an option from the menu below:")
             print("1. Check current balance")
             print("2. Send Money")
-            print("3. Mine for currency")
-            print("4. Quit")
+            print("3. Quit")
             option = input("please select an option: ")
             if option == '1':
                 self.checkCurrentBalance()
             elif option == '2':
                 self.sendMoney()
             elif option == '3':
-                self.mine()
-            elif option == '4':
                 break
             elif option == '99':
                 # somewhat secret option for performing options we wouldn't normally allow.
