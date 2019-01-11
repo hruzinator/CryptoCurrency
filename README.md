@@ -5,7 +5,9 @@ This project assumes knowledge of how a Blockchain works. If you are unfamiliar,
 2. Make sure you are inside the cloned directory and create a virtual Environment: `python3 -m venv ./`
 3. Activate the virtual envioronment with `source bin/activate`
 4. Install dependencies with `pip install -r requirements.txt`
-5. Run the application with python app.py
+5. Run the application with `python app.py`
+
+You can always bring down the virtual environment with `deactivate`
 
 # Blockchain
 The blockchain is an abstract data type. It should not be confused with the ledger, which implements the blockchain to maintain a record of financial transactions. The Blockchain data type should be abstract enough that it could be applied for other uses.
